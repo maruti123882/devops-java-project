@@ -12,9 +12,9 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'maruti8861',
-                    passwordVariable: 'Maruti@1994'
+                    credentialsId: 'dockerhub-creds',  // Jenkins credentials ID
+                    usernameVariable: 'DOCKER_USER',  // variable Jenkins will populate with your username
+                    passwordVariable: 'DOCKER_PASS'   // variable Jenkins will populate with your password
                 )]) {
                     sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                 }
@@ -24,8 +24,8 @@ pipeline {
         stage('Push Image to Docker Hub') {
             steps {
                 sh '''
-                docker tag devops-app maruti8861/devops-app:latest
-                docker push maruti8861/devops-app:latest
+                docker tag devops-app $DOCKER_USER/devops-app:latest
+                docker push $DOCKER_USER/devops-app:latest
                 '''
             }
         }
@@ -34,7 +34,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f devops-container || true
-                docker run -d -p 80:80 --name devops-container maruti123882/devops-app:latest
+                docker run -d -p 80:80 --name devops-container $DOCKER_USER/devops-app:latest
                 '''
             }
         }
