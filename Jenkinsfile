@@ -31,12 +31,13 @@ pipeline {
         }
 
         stage('Run Container') {
-            steps {
-                sh '''
-                docker rm -f devops-container || true
-                docker run -d -p 80:80 --name devops-container $DOCKER_USER/devops-app:latest
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker rm -f devops-container || true
+        docker run -d -p 80:80 --name devops-container maruti8861/devops-app:latest
+        '''
+    }
+}
+
     }
 }
