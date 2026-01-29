@@ -24,8 +24,8 @@ pipeline {
         stage('Push Image to Docker Hub') {
             steps {
                 sh '''
-                docker tag devops-app $DOCKER_USER/devops-app:latest
-                docker push $DOCKER_USER/devops-app:latest
+                docker tag devops-app maruti8861/devops-app:latest
+                docker push maruti8861/devops-app:latest
                 '''
             }
         }
