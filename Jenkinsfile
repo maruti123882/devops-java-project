@@ -1,13 +1,8 @@
 pipeline {
     agent any
 
-    /*stages {
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/maruti123882/devops-java-project.git'
-            }
-        }
-*/
+    stages {
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t devops-app .'
@@ -26,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Push Image') {
+        stage('Push Image to Docker Hub') {
             steps {
                 sh '''
                 docker tag devops-app maruti8861/devops-app:latest
@@ -39,9 +34,9 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f devops-container || true
-                docker run -d -p 80:80 --name devops-container maruti8861/devops-app:latest
+                docker run -d -p 80:80 --name devops-container maruti123882/devops-app:latest
                 '''
             }
         }
     }
-
+}
