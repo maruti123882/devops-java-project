@@ -39,5 +39,15 @@ pipeline {
     }
 }
 
+     stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                kubectl create namespace ${K8S_NAMESPACE} || true
+                kubectl apply -f deployment.yaml -n ${K8S_NAMESPACE}
+                kubectl apply -f service.yaml -n ${K8S_NAMESPACE}
+                kubectl rollout status deployment/devops-app -n ${K8S_NAMESPACE}
+                '''
+            }
+        }
     }
 }
