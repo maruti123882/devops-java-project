@@ -34,7 +34,7 @@ pipeline {
     steps {
         sh '''
         docker rm -f devops-container || true
-        docker run -d -p 80:80 --name devops-container maruti8861/devops-java-project:latest
+        docker run -d -p 1000:80 --name devops-container maruti8861/devops-java-project:latest
         '''
     }
 }
