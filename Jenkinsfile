@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "maruti8861/devops-app:latest"
+    }
+
     stages {
 
         stage('Login to Docker Hub') {
@@ -12,7 +16,7 @@ pipeline {
                 )]) {
                     sh '''
                         docker logout || true
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     '''
                 }
             }
@@ -20,13 +24,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t maruti8861/devops-app:latest .'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                sh 'docker push maruti8861/devops-java-project:latest'
+                sh 'docker push $IMAGE_NAME'
             }
         }
     }
