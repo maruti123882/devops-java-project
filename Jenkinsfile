@@ -26,7 +26,7 @@ pipeline {
 
         stage('Push Image to Docker Hub') {
             steps {
-                sh 'docker push maruti8861/devops-app:latest'
+                sh 'docker push maruti8861/devops-java-project:latest'
             }
         }
     }
