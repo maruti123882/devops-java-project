@@ -39,8 +39,27 @@ pipeline {
     }
 }
 
+stage('Deploy to Kubernetes') {
+            steps {
+                // Set the image in deployment.yaml dynamically
+                sh """
+                kubectl set image deployment/devops-app devops-app=$IMAGE_NAME --record || echo "Deployment not found, creating..."
+                kubectl apply -f k8s/deployment.yaml
+                kubectl apply -f k8s/service.yaml
+                """
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh """
+                kubectl get pods
+                kubectl get svc
+                """
+            }
+        }
+
     }
-}
-    
+} 
     
     
