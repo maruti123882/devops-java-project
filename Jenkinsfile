@@ -21,23 +21,19 @@ pipeline {
             }
         }
 
-        stage('Push Image to Docker Hub') {
-            steps {
-                sh '''
-                docker tag devops-java-project maruti8861/devops-app:latest
-                docker push maruti8861/devops-app:latest
-                '''
-            }
-        }
-
-        stage('Run Container') {
+        stage('Build Docker Image') {
     steps {
-        sh '''
-        docker rm -f devops-container || true
-        docker run -d -p 80:80 --name devops-container maruti8861/devops-app:latest
-        '''
+        sh 'docker build -t maruti8861/devops-app:latest .'
     }
 }
+
+
+       stage('Push Image to Docker Hub') {
+    steps {
+        sh 'docker push maruti8861/devops-app:latest'
+    }
+}
+
 
     }
 }
