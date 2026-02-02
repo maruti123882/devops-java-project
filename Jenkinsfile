@@ -1,37 +1,46 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "maruti8861/devops-java-project:latest"
-    }
-
     stages {
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t devops-app1 .'
+            }
+        }
 
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
+                    credentialsId: 'dockerhub-creds',  // Jenkins credentials ID
+                    usernameVariable: 'DOCKER_USER',  // variable Jenkins will populate with your username
+                    passwordVariable: 'DOCKER_PASS'   // variable Jenkins will populate with your password
                 )]) {
-                    sh '''
-                        docker logout || true
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    '''
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                 }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                sh 'docker push $IMAGE_NAME'
+                sh '''
+                docker tag devops-app maruti8861/devops-java-project:latest
+                docker push maruti8861/devops-java-project:latest
+                '''
             }
         }
+
+        stage('Run Container') {
+    steps {
+        sh '''
+        docker rm -f devops-container || true
+        docker run -d -p 80:80 --name devops-container maruti8861/devops-java-project:latest
+        '''
     }
 }
+
+    }
+}
+    
+    
+    
